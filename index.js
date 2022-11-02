@@ -87,7 +87,7 @@ function ball (ballX, ballY){
     ctx.fill();
     };
     
-    ball();
+    // ball(ballX, ballY);
 
 function newBall (){
         ballSpeed = 1;
@@ -103,17 +103,20 @@ function newBall (){
         else{
             ballYTragectory = Math.random() * -1; //more random directions
         }
-        ballX = gameWidth / 2;
-        ballY = gameHeight / 2;
+        ballX = boardWidth / 2;
+        ballY = boardHeight / 2;
         ball(ballX, ballY);
+        // clearBoard();
     };
 
     newBall();
-    
+
     function moveBall(){
         ballX += (ballSpeed * ballXTragectory);
         ballY += (ballSpeed * ballYTragectory);
-        ball(ballX, ballY)
+        console.log(ballX);
+        // clearBoard();
+        newBall();
     };
 
     moveBall();
@@ -122,6 +125,7 @@ function newBall (){
 function clearBoard (){
     ctx.clearRect(0, 0, boardWidth, boardHeight)
     paddles();
-    ball(ballX, ballY);
-    moveBall();
+    newBall();
+    // moveBall();
+    // ball(ballX, ballY);
 };
