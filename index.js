@@ -34,7 +34,7 @@ const paddle2 = {
     y: boardHeight - 75
 };
 
-paddles();
+
 
 function paddles () {
     ctx.strokeStyle = paddleBorder;
@@ -54,22 +54,22 @@ function paddleMovement(){
 
         if(event.code === 'KeyW'){
             paddle1.y -= 20;
-            clearBoard();
+            //clearBoard();
           }
         
           if(event.code === 'KeyS'){
             paddle1.y += 20;
-            clearBoard();
+            //clearBoard();
           }
         
           if(event.code === 'ArrowUp'){
             paddle2.y -= 20;
-            clearBoard();
+            //clearBoard();
           }
         
           if(event.code === 'ArrowDown'){
             paddle2.y += 20;
-            clearBoard();
+            //clearBoard();
           }
       
       })
@@ -82,9 +82,11 @@ paddleMovement();
 function ball (ballX, ballY){
     ctx.fillStyle = ballColor;
     ctx.lineWidth = 2;
+    ctx.beginPath();
     ctx.arc(ballX, ballY, 12.5, 0, 2 * Math.PI)
-    ctx.stroke();
+    //ctx.stroke();
     ctx.fill();
+    ctx.closePath()
     };
     
     // ball(ballX, ballY);
@@ -105,27 +107,39 @@ function newBall (){
         }
         ballX = boardWidth / 2;
         ballY = boardHeight / 2;
-        ball(ballX, ballY);
+        //ball(ballX, ballY);
         // clearBoard();
     };
 
-    newBall();
+    
 
     function moveBall(){
         ballX += (ballSpeed * ballXTragectory);
         ballY += (ballSpeed * ballYTragectory);
         console.log(ballX);
         // clearBoard();
-        newBall();
+        //newBall();
+        ball(ballX, ballY)
     };
 
+    //moveBall();
+
+
+// function clearBoard (){
+//     ctx.clearRect(0, 0, boardWidth, boardHeight)
+//     paddles();
+//     ball(ballX, ballY);
+//     //newBall();
+//     // moveBall();
+
+// };
+
+newBall();
+
+let singleFrameAnimation = () => {
+    ctx.clearRect(0, 0, boardWidth, boardHeight);
     moveBall();
-
-
-function clearBoard (){
-    ctx.clearRect(0, 0, boardWidth, boardHeight)
     paddles();
-    newBall();
-    // moveBall();
-    // ball(ballX, ballY);
-};
+}
+
+setInterval(singleFrameAnimation, 16)
