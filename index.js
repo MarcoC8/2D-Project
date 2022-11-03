@@ -15,19 +15,20 @@ let ballY = boardHeight / 2;
 let ballSpeed;
 let ballXTragectory = 0;
 let ballYTragectory = 0;
-let intervalId;
 let player1Score = 0;
 let player2Score = 0;
 
+resetButton.addEventListener("click", resetGame);
+
 // Paddles for player 1 and 2. 
 
-const paddle1 = {
+let paddle1 = {
     width: 25,
     height: 75,
     x: 0,
     y: 0
 };
-const paddle2 = {
+let paddle2 = {
     width: 25,
     height: 75,
     x: boardWidth - 25,
@@ -53,23 +54,19 @@ function paddleMovement(){
     window.addEventListener('keydown', function(event){
 
         if(event.code === 'KeyW'){
-            paddle1.y -= 20;
-            //clearBoard();
+            paddle1.y -= 30;
           }
         
           if(event.code === 'KeyS'){
-            paddle1.y += 20;
-            //clearBoard();
+            paddle1.y += 30;
           }
         
           if(event.code === 'ArrowUp'){
-            paddle2.y -= 20;
-            //clearBoard();
+            paddle2.y -= 30;
           }
         
           if(event.code === 'ArrowDown'){
-            paddle2.y += 20;
-            //clearBoard();
+            paddle2.y += 30;
           }
       
       })
@@ -84,12 +81,10 @@ function ball (ballX, ballY){
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(ballX, ballY, 12.5, 0, 2 * Math.PI)
-    //ctx.stroke();
     ctx.fill();
     ctx.closePath()
     };
     
-    // ball(ballX, ballY);
 
 function newBall (){
         ballSpeed = 1;
@@ -107,8 +102,6 @@ function newBall (){
         }
         ballX = boardWidth / 2;
         ballY = boardHeight / 2;
-        //ball(ballX, ballY);
-        // clearBoard();
     };
 
     
@@ -116,23 +109,9 @@ function newBall (){
     function moveBall(){
         ballX += (ballSpeed * ballXTragectory);
         ballY += (ballSpeed * ballYTragectory);
-        console.log(ballX);
-        // clearBoard();
-        //newBall();
         ball(ballX, ballY)
     };
 
-    //moveBall();
-
-
-// function clearBoard (){
-//     ctx.clearRect(0, 0, boardWidth, boardHeight)
-//     paddles();
-//     ball(ballX, ballY);
-//     //newBall();
-//     // moveBall();
-
-// };
 
 newBall();
 
@@ -140,6 +119,71 @@ let singleFrameAnimation = () => {
     ctx.clearRect(0, 0, boardWidth, boardHeight);
     moveBall();
     paddles();
+    ballBounce();
 }
 
 setInterval(singleFrameAnimation, 16)
+
+function updateScore(){
+    score.textContent = `${player1Score} : ${player2Score}`;
+};
+
+// Collision for the ball. Including the top and bottom of the canvas, and also the paddles.
+
+function ballBounce(){
+    if(ballY <= 0 + 12.5){
+        ballYTragectory *= -1;
+    }
+    if(ballY >= boardHeight - 12.5){
+        ballYTragectory *= -1;
+    }
+    if(ballX <= 0){
+        player2Score+=1;
+        updateScore();
+        newBall();
+        return;
+    }
+    if(ballX >= boardWidth){
+        player1Score+=1;
+        updateScore();
+        newBall();
+        return;
+    }
+    if(ballX <= (paddle1.x + paddle1.width + 12.5)){
+        if(ballY > paddle1.y && ballY < paddle1.y + paddle1.height){
+            ballXTragectory *= -1;
+            ballSpeed += 1;
+        }
+    }
+    if(ballX >= (paddle2.x - 12.5)){
+        if(ballY > paddle2.y && ballY < paddle2.y + paddle2.height){
+            ballXTragectory *= -1;
+            ballSpeed += 1;
+}
+    }
+};
+
+
+function resetGame(){
+    player1Score = 0;
+    player2Score = 0;
+    paddle1 = {
+        width: 25,
+        height: 75,
+        x: 0,
+        y: 0
+    };
+    paddle2 = {
+        width: 25,
+        height: 75,
+        x: boardWidth - 25,
+        y: boardHeight - 75
+    };
+    ballSpeed = 1;
+    ballX = 0;
+    ballY = 0;
+    ballXTragectory = 0;
+    ballYTragectory = 0;
+    singleFrameAnimation();
+    updateScore();
+}
