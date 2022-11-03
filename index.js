@@ -10,6 +10,8 @@ const paddleBorder = 'black';
 const paddle1Color = 'pink';
 const paddle2Color = 'yellow';
 const ballColor = 'black';
+const hitAudio = new Audio("../audio/ping-pong-noise.mp3");
+          hitAudio.play();
 let ballX = boardWidth / 2;
 let ballY = boardHeight / 2;
 let ballSpeed;
@@ -18,7 +20,10 @@ let ballYTragectory = 0;
 let player1Score = 0;
 let player2Score = 0;
 
-resetButton.addEventListener("click", resetGame);
+function startGame(){
+    
+}
+
 
 // Paddles for player 1 and 2. 
 
@@ -54,19 +59,19 @@ function paddleMovement(){
     window.addEventListener('keydown', function(event){
 
         if(event.code === 'KeyW'){
-            paddle1.y -= 30;
+            paddle1.y -= 50;
           }
         
           if(event.code === 'KeyS'){
-            paddle1.y += 30;
+            paddle1.y += 50;
           }
         
           if(event.code === 'ArrowUp'){
-            paddle2.y -= 30;
+            paddle2.y -= 50;
           }
         
           if(event.code === 'ArrowDown'){
-            paddle2.y += 30;
+            paddle2.y += 50;
           }
       
       })
@@ -137,14 +142,14 @@ function ballBounce(){
     if(ballY >= boardHeight - 12.5){
         ballYTragectory *= -1;
     }
-    if(ballX <= 0){
-        player2Score+=1;
+    if(ballX >= boardWidth){
+        player1Score+= 1;
         updateScore();
         newBall();
         return;
     }
-    if(ballX >= boardWidth){
-        player1Score+=1;
+    if(ballX <= 0){
+        player2Score+= 1;
         updateScore();
         newBall();
         return;
@@ -153,16 +158,22 @@ function ballBounce(){
         if(ballY > paddle1.y && ballY < paddle1.y + paddle1.height){
             ballXTragectory *= -1;
             ballSpeed += 1;
+            hitAudio.play();
         }
     }
     if(ballX >= (paddle2.x - 12.5)){
         if(ballY > paddle2.y && ballY < paddle2.y + paddle2.height){
             ballXTragectory *= -1;
             ballSpeed += 1;
+            hitAudio.play();
 }
     }
 };
 
+
+//Reset button
+
+resetButton.addEventListener("click", resetGame);
 
 function resetGame(){
     player1Score = 0;
@@ -180,10 +191,8 @@ function resetGame(){
         y: boardHeight - 75
     };
     ballSpeed = 1;
-    ballX = 0;
-    ballY = 0;
     ballXTragectory = 0;
     ballYTragectory = 0;
-    singleFrameAnimation();
+    newBall();
     updateScore();
 }
